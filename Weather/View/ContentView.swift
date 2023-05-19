@@ -77,6 +77,10 @@ struct ContentView: View {
         }
         .onAppear {
             locationManager.requestLocation()
+            if let value = UserDefaults.standard.string(forKey: "Place") {
+                city = value
+                searchWeather()
+            }
         }
     }
     
@@ -85,6 +89,7 @@ struct ContentView: View {
             vm.fetchWeatherData(forCity: city, lat: 0, lon: 0) { result in
                 if let data = result {
                     self.weatherData = data
+                    UserDefaults.standard.set(data.name, forKey: "Place")
                 } else {
                     showAlert = true
                 }
@@ -99,6 +104,7 @@ struct ContentView: View {
         vm.fetchWeatherData(forCity: String(), lat: locationManager.latitude, lon: locationManager.longitude) { result in
             if let data = result {
                 self.weatherData = data
+                UserDefaults.standard.set(data.name, forKey: "Place")
             } else {
                 self.weatherData = nil
                 showAlert = true
